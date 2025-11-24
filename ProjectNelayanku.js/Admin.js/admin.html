@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Gudang Lelang</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="admin-header">
+    <h1>🎣 Admin Panel - Gudang Lelang</h1>
+    <p>Kelola Produk dan Stok</p>
+  </div>
+
+  <div class="admin-container">
+    <!-- Form Add/Edit Product -->
+    <div class="admin-form">
+      <h2>Tambah / Edit Produk</h2>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+        
+        <div class="form-group">
+          <label for="productName">Nama Produk *</label>
+          <input type="text" id="productName" placeholder="Contoh: Tuna" required>
+        </div>
+
+        <div class="form-group">
+          <label for="productCategory">Kategori *</label>
+          <select id="productCategory" required>
+            <option value="">Pilih Kategori</option>
+            <option value="Ikan Segar">Ikan Segar</option>
+            <option value="Udang">Udang</option>
+            <option value="Cumi dan Gurita">Cumi dan Gurita</option>
+            <option value="Kerang dan Tiram">Kerang dan Tiram</option>
+            <option value="Kepiting dan Rajungan">Kepiting dan Rajungan</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="productPrice">Harga (per kg) *</label>
+          <input type="number" id="productPrice" placeholder="50000" required>
+        </div>
+
+        <div class="form-group">
+          <label for="productStock">Status Stok</label>
+          <select id="productStock">
+            <option value="Tanyakan Stock">Tanyakan Stock</option>
+            <option value="Stok Harian">Stok Harian</option>
+            <option value="Premium">Premium</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary" id="submitBtn">Tambah Produk</button>
+          <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">Batal</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products Table -->
+    <div class="admin-table">
+      <h2 style="padding: 1.5rem; background: #f5f8fa; margin: 0;">Daftar Produk</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Kategori</th>
+            <th>Harga</th>
+            <th>Stok</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="productsTableBody">
+          <tr>
+            <td colspan="6" style="text-align: center;">Memuat data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top: 2rem; text-align: center;">
+      <a href="index.html" class="btn btn-secondary">← Kembali ke Beranda</a>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

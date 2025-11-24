@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog Produk - Gudang Lelang</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <svg class="logo-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#1e88e5"/>
+          <path d="M70 45 Q65 35 55 40 L45 50 Q40 55 45 60 L70 45Z" fill="white"/>
+          <circle cx="60" cy="42" r="3" fill="#1e3a5f"/>
+        </svg>
+        <span>Gudang Lelang</span>
+      </a>
+      <ul>
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="tentang.html">Tentang Kami</a></li>
+        <li><a href="visi-misi.html">Visi & Misi</a></li>
+        <li><a href="katalog.html">Katalog</a></li>
+        <li><a href="alamat.html">Alamat</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Katalog Produk</h1>
+      <p>Berbagai Jenis Hasil Laut Segar</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="category-filter">
+      <button class="category-btn active" data-category="all">Semua</button>
+      <button class="category-btn" data-category="Ikan Segar">Ikan Segar</button>
+      <button class="category-btn" data-category="Udang">Udang</button>
+      <button class="category-btn" data-category="Cumi dan Gurita">Cumi dan Gurita</button>
+      <button class="category-btn" data-category="Kerang dan Tiram">Kerang dan Tiram</button>
+      <button class="category-btn" data-category="Kepiting dan Rajungan">Kepiting dan Rajungan</button>
+    </div>
+
+    <div id="products-container" class="cards-grid">
+      <!-- Products will be loaded here by JavaScript -->
+      <p style="text-align: center; grid-column: 1 / -1; padding: 2rem;">
+        Memuat produk...
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Gudang Lelang TelukBetung - Nelayanku. All rights reserved.</p>
+    <p>Ikan Segar Langsung Dari Nelayan</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Load products on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProducts();
+      
+      // Category filter
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoryButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          const category = btn.getAttribute('data-category');
+          if (category === 'all') {
+            loadProducts();
+          } else {
+            loadProductsByCategory(category);
+          }
+        });
+      });
+    });
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        const products = await response.json();
+        displayProducts(products);
+      } catch (error) {
+        console.error('Error loading products:', error);
+        document.getElementById('products-container').innerHTML = 
+          '<p style="text-align: center; grid-column: 1 / -1; color: red;">Gagal memuat produk. Pastikan server berjalan.</p>';
+      }
+    }
+
+    async function loadProductsByCategory(category) {
+      try {
+        const response = await fetch(`/api/products/category/${encodeURIComponent(category)}`);
+        const products = await response.json();
+        displayProducts(products);
+      } catch (error) {
+        console.error('Error loading products:', error);
+      }
+    }
+
+    function displayProducts(products) {
+      const container = document.getElementById('products-container');
+      
+      if (products.length === 0) {
+        container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Tidak ada produk.</p>';
+        return;
+      }
+
+      container.innerHTML = products.map(product => `
+        <div class="card">
+          <div class="card-img" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+            ${getCategoryEmoji(product.kategori)}
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${product.nama}</h3>
+            <p class="card-price">${formatPrice(product.harga)}/kg</p>
+            <span class="card-badge">${product.stok}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getCategoryEmoji(category) {
+      const emojiMap = {
+        'Ikan Segar': '🐟',
+        'Udang': '🦐',
+        'Cumi dan Gurita': '🦑',
+        'Kerang dan Tiram': '🦪',
+        'Kepiting dan Rajungan': '🦀'
+      };
+      return emojiMap[category] || '🐠';
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(price);
+    }
+  </script>
+</body>
+</html>
